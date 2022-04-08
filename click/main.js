@@ -1,58 +1,66 @@
 const app = document.querySelector('.app')
-const firstBox = document.createElement('div')
-firstBox.classList.add('app__box')
-app.appendChild(firstBox)
-const secondBox = document.createElement('div')
-secondBox.classList.add('app__box')
-app.appendChild(secondBox)
+
+const createTimerBox = () => {
+    const firstBox = document.createElement('div')
+    firstBox.classList.add('app__box')
+    app.appendChild(firstBox)
+    return document.querySelector('.app__box')
+}
+
+const createCircleBox = () => {
+    const secondBox = document.createElement('div')
+    secondBox.classList.add('app__box')
+    app.appendChild(secondBox)
+    return document.querySelectorAll('.app__box')[1]
+}
 
 const timer = document.createElement('div')
 timer.classList.add('timer')
-firstBox.appendChild(timer)
+createTimerBox().appendChild(timer)
 
 const stopTime = document.createElement('p')
 stopTime.innerHTML = 'Stop Time'
 
-
-let seconds = 2
-let minutes = parseInt(seconds / 60)
+let seconds = 60
+let minutes = parseInt(seconds / 60, 10)
 seconds = seconds % 60
 
-const interval = setInterval(function () {
+const interval = setInterval(() => {
     if (seconds === 0 && minutes === 1) {
         minutes -= 1
         seconds = 60
-    } else if (seconds === 0) {
+    }
+    if (seconds === 0) {
         clearInterval(interval)
-        firstBox.appendChild(stopTime)
+        createTimerBox().appendChild(stopTime)
         alert(`${points} : Total Score`)
     }
     seconds -= 1
-    return timer.innerHTML = `${minutes.toString().padStart(2, '0')}:` + seconds.toString().padStart(2, '0')
-}, 1000);
+    timer.innerHTML = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`
+}, 1000)
 
+const circleContainer = document.createElement('div')
+createCircleBox().appendChild(circleContainer)
+circleContainer.classList.add('app__container')
 
-const secondBoxContainer = document.createElement('div')
-secondBox.appendChild(secondBoxContainer)
-secondBoxContainer.classList.add('app__container')
-
-const circles = [1, 2, 3, 4, 5]
+const circles = Array.from(new Array(5))
 
 circles.forEach(object => {
     const newCircle = document.createElement('div')
     newCircle.classList.add('circle')
-    secondBoxContainer.appendChild(newCircle)
+    circleContainer.appendChild(newCircle)
 })
 
 const scoreBox = document.createElement('input')
 scoreBox.classList.add('points-box')
+createCircleBox().appendChild(scoreBox)
+
 let points = 0
 scoreBox.value = points
-secondBox.appendChild(scoreBox)
 
 const allCircles = document.querySelectorAll('.circle')
 
-const addColor = setInterval(function () {
+const addColor = setInterval(() => {
     allCircles.forEach(object => {
         object.classList.remove('circle__red')
         object.classList.remove('circle__green')
@@ -60,13 +68,11 @@ const addColor = setInterval(function () {
     let randomNumber = Math.floor(Math.random() * 5)
     let coloredCircle = allCircles[randomNumber]
     coloredCircle.classList.add('circle__red')
-
     document.querySelector('.app__container').addEventListener('click', scorePoint)
 
 }, 1000)
 
-
-function scorePoint(event) {
+const scorePoint = event => {
 
     if (event.target.classList.toString() === 'circle circle__red') {
         points += 1
