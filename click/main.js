@@ -78,7 +78,7 @@ const addColor = setInterval(() => {
 
 const scorePoint = event => {
 
-    if (event.target.classList.toString() === 'circle circle__red') {
+    if (event.target.classList.contains('circle circle__red')) {
         points += 1
         document.querySelector('.app__container').removeEventListener('click', scorePoint)
         scoreBox.value = points
